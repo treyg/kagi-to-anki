@@ -1,5 +1,5 @@
 {
-  "name": "kagi-to-anki",
+  "name": "kagi-translate-to-anki",
   "version": "1.0.0",
   "description": "Browser extension to create Anki flashcards from Kagi Translate with audio and word insights",
   "type": "module",
