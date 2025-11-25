@@ -1,0 +1,21 @@
+{
+  "name": "kagi-to-anki",
+  "version": "1.0.0",
+  "description": "Browser extension to create Anki flashcards from Kagi Translate with audio and word insights",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/chrome": "^0.0.254",
+    "@types/webextension-polyfill": "^0.10.7",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
+    "vite-plugin-web-extension": "^4.1.1",
+    "webextension-polyfill": "^0.10.0"
+  }
+}

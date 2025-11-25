@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kagi to Anki Settings</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="options-container">
+      <header>
+        <h1>Kagi to Anki Settings</h1>
+      </header>
+
+      <div class="section">
+        <h2>Anki Configuration</h2>
+
+        <div class="form-group">
+          <label for="anki-deck">Default Deck</label>
+          <select id="anki-deck">
+            <option value="">Loading decks...</option>
+          </select>
+          <p class="help-text">Select which Anki deck to save cards to</p>
+        </div>
+
+        <div class="form-group">
+          <button id="refresh-decks" class="btn btn-secondary">
+            Refresh Decks
+          </button>
+          <!-- <button id="create-model" class="btn btn-secondary">Create Anki Model</button> -->
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Card Options</h2>
+
+        <div class="form-group">
+          <label for="custom-tags">Custom Tags (comma-separated)</label>
+          <input
+            type="text"
+            id="custom-tags"
+            placeholder="kagi-translate, vietnamese, language-learning"
+          />
+          <p class="help-text">Tags to add to every card</p>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="include-audio" />
+            <span>Include audio pronunciation</span>
+          </label>
+          <p class="help-text">Download and embed audio files in flashcards</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Setup Guide</h2>
+        <div class="guide">
+          <ol>
+            <li>
+              Install <strong>Anki</strong> desktop app from
+              <a href="https://apps.ankiweb.net" target="_blank">ankiweb.net</a>
+            </li>
+            <li>
+              Install <strong>AnkiConnect</strong> add-on (code:
+              <code>2055492159</code>)
+            </li>
+            <li>Restart Anki</li>
+            <li>Click "Create Anki Model" above to set up the card template</li>
+            <li>Select your preferred deck</li>
+            <li>
+              Visit
+              <a href="https://translate.kagi.com" target="_blank"
+                >Kagi Translate</a
+              >
+              and start creating flashcards!
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="save-settings" class="btn btn-primary">
+          Save Settings
+        </button>
+      </div>
+
+      <div id="status-message" class="status-message"></div>
+    </div>
+
+    <script src="index.ts" type="module"></script>
+  </body>
+</html>

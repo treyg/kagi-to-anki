@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kagi to Anki</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="popup-container">
+      <header>
+        <h1>Kagi to Anki</h1>
+      </header>
+
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-label">Cards Created</span>
+          <span class="stat-value" id="card-count">0</span>
+        </div>
+      </div>
+
+      <div class="connection-status">
+        <div id="anki-status" class="status-indicator">
+          <span class="status-dot"></span>
+          <span class="status-text">Checking Anki...</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="test-connection" class="btn btn-secondary">
+          Test Connection
+        </button>
+        <button id="open-options" class="btn btn-secondary">Settings</button>
+      </div>
+
+      <footer>
+        <p>
+          Open
+          <a href="https://translate.kagi.com" target="_blank"
+            >Kagi Translate</a
+          >
+          to create flashcards
+        </p>
+      </footer>
+    </div>
+
+    <script src="index.ts" type="module"></script>
+  </body>
+</html>

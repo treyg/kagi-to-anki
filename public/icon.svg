@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <title>Modern Kagi-Anki Extension Icon</title>
+  <desc>Two overlapping rounded rectangles with modern gradients and a soft shadow, featuring the letters K and A.</desc>
+
+  <defs>
+    <!-- 1. Modern Gradients -->
+    <!-- Kagi (Teal/Green) Gradient - Subtle diagonal flow -->
+    <linearGradient id="kagiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#43C6AC;stop-opacity:1" /> <!-- Slightly lighter teal -->
+      <stop offset="100%" style="stop-color:#198F78;stop-opacity:1" /> <!-- Deeper teal -->
+    </linearGradient>
+
+    <!-- Anki (Purple/Blue) Gradient - Subtle diagonal flow -->
+    <linearGradient id="ankiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6F7BFF;stop-opacity:1" /> <!-- Lighter purple -->
+      <stop offset="100%" style="stop-color:#4543DD;stop-opacity:1" /> <!-- Deeper purple -->
+    </linearGradient>
+
+    <!-- 2. Thoughtful Depth (Drop Shadow Filter) -->
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/> <!-- Soft blur -->
+      <feOffset in="blur" dx="2" dy="3" result="offsetBlur"/> <!-- Offset down and right -->
+      <feFlood flood-color="#000000" flood-opacity="0.25" result="offsetColor"/> <!-- Shadow color/opacity -->
+      <feComposite in="offsetColor" in2="offsetBlur" operator="in" result="offsetBlur"/>
+      <feMerge>
+        <feMergeNode in="offsetBlur"/>
+        <feMergeNode in="SourceGraphic"/> <!-- Integrate original shape on top -->
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Card: Anki (Purple Gradient) -->
+  <!-- Adjusted position and tighter corner radius (rx="18") for generic modern feel -->
+  <rect x="42" y="24" width="76" height="94" rx="18" fill="url(#ankiGrad)" />
+
+  <!-- Foreground Card: Kagi (Teal Gradient) -->
+  <!-- Positioned upper-left. Filter applied for soft shadow depth. No thick stroke needed. -->
+  <rect x="10" y="10" width="76" height="94" rx="18" fill="url(#kagiGrad)" filter="url(#softShadow)" />
+
+  <!-- Typography -->
+  <!-- Using a modern system font stack without rounded edges. Adjusted positions for visual centering. -->
+  <g fill="#FFFFFF" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="52" font-weight="700" text-anchor="middle">
+    <!-- 'K' centered visually on the top card -->
+    <text x="48" y="75">K</text>
+    <!-- 'A' centered visually on the exposed bottom card area -->
+    <text x="89" y="89">A</text>
+  </g>
+</svg>

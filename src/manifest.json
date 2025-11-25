@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Kagi Translate to Anki",
+  "version": "1.0.0",
+  "description": "Create Anki flashcards from Kagi Translate with audio, word insights, and alternative translations",
+  "author": "Treyg",
+  "homepage_url": "https://github.com/treyg/kagi-translate-to-anki",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3b20FByHvQuEfN/Nq/Ca1PV6hJUWLjyUjYHVzm2HpR+rYolsGCN7EayiYqRXGLhns2+vruFduL/53A3TYyHQLY0zjr7RyXIBYLrlw0ddVkmcYpLbFOmP3PAMqGsBrfn6JbKnKW+nl9Y8kYZV4k1VMNoUTL1ufyxT+NiLQeyzIX20A3E0I4IaqQQ7UmqVuS/bdTvtfvmErrLUmyIzVv6uPH2hqqR20RP4JZ13AH4+R7QepiaUUNHQV2xO7OQkOKpHFuqogW+z6BjAThH/WINzQ0ePW+Ni5DwtvtWMhGO+ietGTrpyY7Kj8gntDhULvJDhWlQ3qer661KTCTPLWP4UvQIDAQAB",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "kagitoanki@treyg.dev"
+    }
+  },
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": [
+    "https://translate.kagi.com/*",
+    "http://localhost:8765/*",
+    "http://127.0.0.1:8765/*"
+  ],
+  "background": {
+    "service_worker": "src/background/index.ts"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://translate.kagi.com/*"],
+      "js": ["src/content/index.ts"],
+      "css": ["src/content/styles.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_page": "src/options/index.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

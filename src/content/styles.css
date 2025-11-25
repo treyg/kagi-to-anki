@@ -1,0 +1,45 @@
+/* Styles for injected UI elements */
+
+.kagi-to-anki-toolbar-btn {
+    white-space: nowrap;
+    border: 1px solid #5352FF !important;
+    border-radius: 6px;
+}
+
+.kagi-to-anki-toolbar-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Toast notifications */
+.kagi-to-anki-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    z-index: 10001;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.kagi-to-anki-toast.show {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.kagi-to-anki-toast.success {
+    background: #42BA99;
+}
+
+.kagi-to-anki-toast.error {
+    background: #5352FF;
+}

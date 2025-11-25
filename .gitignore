@@ -1,0 +1,11 @@
+node_modules
+dist
+.DS_Store
+*.log
+.vite
+.web-extension-id
+extension.pem
+*.pem
+public_key.txt
+generate_key.sh
+DEVELOPMENT.md
