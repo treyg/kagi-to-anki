@@ -15,8 +15,11 @@
         <img src="https://img.shields.io/badge/Firefox%20Add--on-Coming%20Soon-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white" alt="Firefox Coming Soon badge" />
     </a>
 </div>
+<br>
 
 > **Note:** This extension is a hobby project to integrate Kagi Translate and Anki—it isn’t officially affiliated with either project.
+
+<br>
 
 Browser extension to create rich Anki flashcards from [Kagi Translate](https://translate.kagi.com) with audio, word insights, and alternative translations.
 
