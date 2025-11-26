@@ -49,27 +49,6 @@ Browser extension to create rich Anki flashcards from [Kagi Translate](https://t
 <img src="screenshots/card-back.jpg" alt="Anki card back with audio, insights, and alternatives" width="800">
 </details>
 
-<details>
-<summary>Settings Page</summary>
-
-![Extension settings](screenshots/settings-page.jpg)
-
-</details>
-
-<details>
-<summary>Card Front</summary>
-
-![Anki card front](screenshots/card-front.jpg)
-
-</details>
-
-<details>
-<summary>Card Back</summary>
-
-![Anki card back with audio, insights, and alternatives](screenshots/card-back.jpg)
-
-</details>
-
 ## Why
 
 Since discovering kagi translate, it has been a great resource for me in my language learning. The extra insights and ability to play audio in different voices has been incredibly helpful in understanding sentence structure.
