@@ -15,7 +15,8 @@
         <img src="https://img.shields.io/badge/Firefox%20Add--on-Coming%20Soon-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white" alt="Firefox Coming Soon badge" />
     </a>
 </div>
-> This extension is a hobby project to integrate Kagi translate and Anki - it's not officially affiliated with either project
+
+> **Note:** This extension is a hobby project to integrate Kagi Translate and Anki—it isn’t officially affiliated with either project.
 
 Browser extension to create rich Anki flashcards from [Kagi Translate](https://translate.kagi.com) with audio, word insights, and alternative translations.
 
@@ -43,7 +44,7 @@ This will auto-reload the extension when you make changes.
 
 1. **Setup**:
 
-   - Open Anki desktop (must be running)
+   - Open Anki (must be running)
    - Click the extension icon → Settings
    - Select your preferred deck
 
