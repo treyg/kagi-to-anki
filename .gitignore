@@ -9,3 +9,4 @@ extension.pem
 public_key.txt
 generate_key.sh
 DEVELOPMENT.md
+*.zip

@@ -17,8 +17,15 @@ manifest.background = {
 // Remove Chrome-specific 'key' field to avoid warning
 delete manifest.key;
 
+// Add data_collection_permissions - array must have at least 1 item
+if (manifest.browser_specific_settings && manifest.browser_specific_settings.gecko) {
+  manifest.browser_specific_settings.gecko.data_collection_permissions = {
+    required: ['none']
+  };
+}
+
 fs.writeFileSync('dist/manifest.json', JSON.stringify(manifest, null, 2));
-console.log('Firefox manifest patched (removed key, changed to scripts)');
+console.log('Firefox manifest patched');
 "
 
 echo "Firefox build ready in dist/"
