@@ -11,7 +11,7 @@
       "id": "kagitoanki@treyg.dev"
     }
   },
-  "permissions": ["storage", "activeTab"],
+  "permissions": ["storage"],
   "host_permissions": [
     "https://translate.kagi.com/*",
     "http://localhost:8765/*",
