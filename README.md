@@ -4,16 +4,16 @@
 <div align="center" style="display:flex;flex-wrap:wrap;gap:0.6rem;justify-content:center;margin:1.5rem 0;">
     <a href="https://opensource.org/licenses/MIT">
         <img src="https://img.shields.io/badge/MIT%20License-181717?style=for-the-badge&logo=github&logoColor=white" alt="MIT License badge" />
-    </a>
-    <a href="https://www.typescriptlang.org/">
+        </a>
+        <a href="https://www.typescriptlang.org/">
         <img src="https://img.shields.io/badge/TypeScript-5.3-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5.3 badge" />
-    </a>
-    <a href="https://chrome.google.com/webstore">
+        </a>
+        <a href="https://chrome.google.com/webstore">
         <img src="https://img.shields.io/badge/Chrome%20Extension-Coming%20Soon-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Chrome Coming Soon badge" />
-    </a>
-    <a href="https://addons.mozilla.org/en-US/firefox/addon/kagi-translate-to-anki/">
-        <img src="https://img.shields.io/badge/Firefox%20Add--on-Coming%20Soon-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white" alt="Firefox Coming Soon badge" />
-    </a>
+        </a>
+        <a href="https://addons.mozilla.org/en-US/firefox/addon/kagi-translate-to-anki/">
+        <img src="https://img.shields.io/badge/Firefox%20Add--on-Available%20Now-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white" alt="Firefox extension badge" />
+        </a>
 </div>
 <br>
 
