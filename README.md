@@ -11,7 +11,7 @@
     <a href="https://chrome.google.com/webstore">
         <img src="https://img.shields.io/badge/Chrome%20Extension-Coming%20Soon-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Chrome Coming Soon badge" />
     </a>
-    <a href="https://addons.mozilla.org/">
+    <a href="https://addons.mozilla.org/en-US/firefox/addon/kagi-translate-to-anki/">
         <img src="https://img.shields.io/badge/Firefox%20Add--on-Coming%20Soon-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white" alt="Firefox Coming Soon badge" />
     </a>
 </div>
