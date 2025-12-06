@@ -8,8 +8,8 @@
         <a href="https://www.typescriptlang.org/">
         <img src="https://img.shields.io/badge/TypeScript-5.3-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5.3 badge" />
         </a>
-        <a href="https://chrome.google.com/webstore">
-        <img src="https://img.shields.io/badge/Chrome%20Extension-Coming%20Soon-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Chrome Coming Soon badge" />
+        <a href="https://chromewebstore.google.com/detail/kagi-translate-to-anki/lmobpjdeimadeagcjfdklmdgmhefhcnm?pli=1">
+        <img src="https://img.shields.io/badge/Chrome%20Extension-Available%20Now-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Chrome extension available badge" />
         </a>
         <a href="https://addons.mozilla.org/en-US/firefox/addon/kagi-translate-to-anki/">
         <img src="https://img.shields.io/badge/Firefox%20Add--on-Available%20Now-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white" alt="Firefox extension badge" />
