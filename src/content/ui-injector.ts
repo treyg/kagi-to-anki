@@ -5,13 +5,22 @@ export class UIInjector {
   private toast: HTMLDivElement | null = null;
   private onSaveCallback: (() => void) | null = null;
   private observer: MutationObserver | null = null;
+  private pageType: 'translate' | 'dictionary';
 
-  constructor() {
+  constructor(pageType: 'translate' | 'dictionary' = 'translate') {
+    this.pageType = pageType;
     this.injectButton();
     this.injectToastContainer();
   }
 
   private injectButton(): void {
+    // For dictionary pages, inject floating button immediately
+    if (this.pageType === 'dictionary') {
+      this.injectFloatingButton();
+      return;
+    }
+
+    // For translation pages, try toolbar injection
     const tryInjectToolbar = (): boolean => {
       if (this.button) return true; // Already injected
 
@@ -62,28 +71,6 @@ export class UIInjector {
       return false;
     };
 
-    const injectFloatingButton = (): void => {
-      if (this.button) return; // Already injected
-
-      // Create a floating button for pages without the toolbar (e.g., dictionary page)
-      this.button = document.createElement("button");
-      this.button.id = "kagi-to-anki-button";
-      this.button.type = "button";
-      this.button.className = "kagi-to-anki-floating-btn";
-      this.button.setAttribute("aria-label", "Save to Anki");
-      this.button.innerHTML = "Save to Anki";
-      this.button.style.display = "none"; // Hidden until entry is ready
-
-      this.button.addEventListener("click", () => {
-        if (this.onSaveCallback) {
-          this.onSaveCallback();
-        }
-      });
-
-      document.body.appendChild(this.button);
-      this.stopObserving();
-    };
-
     // Try immediate toolbar injection
     if (tryInjectToolbar()) return;
 
@@ -101,9 +88,31 @@ export class UIInjector {
     // After 2 seconds, if toolbar not found, create floating button
     setTimeout(() => {
       if (!this.button) {
-        injectFloatingButton();
+        this.injectFloatingButton();
       }
     }, 2000);
+  }
+
+  private injectFloatingButton(): void {
+    if (this.button) return; // Already injected
+
+    // Create a floating button for pages without the toolbar (e.g., dictionary page)
+    this.button = document.createElement("button");
+    this.button.id = "kagi-to-anki-button";
+    this.button.type = "button";
+    this.button.className = "kagi-to-anki-floating-btn";
+    this.button.setAttribute("aria-label", "Save to Anki");
+    this.button.innerHTML = "Save to Anki";
+    this.button.style.display = "none"; // Hidden until entry is ready
+
+    this.button.addEventListener("click", () => {
+      if (this.onSaveCallback) {
+        this.onSaveCallback();
+      }
+    });
+
+    document.body.appendChild(this.button);
+    this.stopObserving();
   }
 
   private stopObserving(): void {

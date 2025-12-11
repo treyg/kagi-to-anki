@@ -33,7 +33,7 @@ function detectSelectedVoice(): string {
 const pageType = getPageType();
 const translationScraper = pageType === 'translate' ? new KagiScraper() : null;
 const dictionaryScraper = pageType === 'dictionary' ? new DictionaryScraper() : null;
-const ui = new UIInjector();
+const ui = new UIInjector(pageType);
 
 // Monitor for completion based on page type
 let checkInterval = setInterval(() => {
