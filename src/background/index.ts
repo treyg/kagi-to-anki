@@ -1,22 +1,36 @@
 // Background service worker
 
 import { addNote, createModel, testConnection, getDeckNames } from "./anki-api";
-import { formatCardFront, formatCardBack } from "../utils/card-formatter";
+import { formatCardFront, formatCardBack, formatDictionaryFront, formatDictionaryBack } from "../utils/card-formatter";
 import { getSettings, incrementCardCount } from "../utils/storage";
-import type { CapturedTranslation } from "../types/kagi";
+import type { CapturedTranslation, CapturedDictionaryEntry } from "../types/kagi";
 import type { AnkiNote } from "../types/anki";
+
+// Shared note data interface for both translation and dictionary saves
+interface NoteData {
+  front: string;
+  back: string;
+  tags: string[];
+  sourceLang: string;
+  targetLang: string;
+  quality: string;
+  audioData?: string;
+  audioFilename?: string;
+}
 
 // Initialize on install
 chrome.runtime.onInstalled.addListener(async () => {
-
   // Try to create the custom Anki model
   try {
     const connected = await testConnection();
     if (connected) {
       await createModel();
+      console.log('[KagiToAnki] Extension installed, Anki model created successfully');
     } else {
+      console.log('[KagiToAnki] Extension installed, but Anki is not running. Please start Anki with AnkiConnect.');
     }
   } catch (error) {
+    console.error('[KagiToAnki] Extension installation error:', error);
   }
 });
 
@@ -49,70 +63,86 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .catch((error) => sendResponse({ success: false, error: error.message }));
     return true;
   }
+
+  if (message.type === "SAVE_DICTIONARY_TO_ANKI") {
+    handleSaveDictionaryToAnki(message.data as CapturedDictionaryEntry)
+      .then((result) => sendResponse({ success: true, result }))
+      .catch((error) => sendResponse({ success: false, error: error.message }));
+    return true;
+  }
 });
 
-async function handleSaveToAnki(
-  translation: CapturedTranslation
-): Promise<{ noteId: number; cardCount: number }> {
+// Shared helper for saving notes to Anki
+async function saveNoteToAnki(data: NoteData): Promise<{ noteId: number; cardCount: number }> {
   // Ensure the Anki model exists (create if missing)
   try {
     await createModel();
   } catch (error) {
+    console.warn('[KagiToAnki] Model creation warning (may already exist):', error);
   }
 
-  // Get settings
   const settings = await getSettings();
 
-  // Format card content
-  const front = formatCardFront(translation);
-  const back = formatCardBack(translation);
-
-  // Prepare tags
-  const tags = [
-    ...settings.customTags,
-    `${translation.sourceLang}-${translation.targetLang}`,
-    translation.quality,
-  ];
-
-  // Build Anki note
   const note: AnkiNote = {
     deckName: settings.ankiDeck,
     modelName: "Kagi Translation",
     fields: {
-      Front: front,
-      Back: back,
-      Audio: "", // Will be populated by audio field below
-      SourceLang: translation.sourceLang,
-      TargetLang: translation.targetLang,
-      Quality: translation.quality,
+      Front: data.front,
+      Back: data.back,
+      Audio: "",
+      SourceLang: data.sourceLang,
+      TargetLang: data.targetLang,
+      Quality: data.quality,
     },
-    tags,
+    tags: [...settings.customTags, ...data.tags],
     options: {
       allowDuplicate: false,
       duplicateScope: "deck",
     },
   };
 
-  // Add audio if available
-  if (translation.audioData && translation.audioFilename) {
-
+  if (data.audioData && data.audioFilename) {
     note.audio = [
       {
-        data: translation.audioData,
-        filename: translation.audioFilename,
+        data: data.audioData,
+        filename: data.audioFilename,
         fields: ["Audio"],
       },
     ];
-  } else {
   }
 
-
-  // Add note to Anki
   const noteId = await addNote(note);
-
-  // Increment card count
   const cardCount = await incrementCardCount();
 
-
   return { noteId, cardCount };
+}
+
+async function handleSaveToAnki(
+  translation: CapturedTranslation
+): Promise<{ noteId: number; cardCount: number }> {
+  return saveNoteToAnki({
+    front: formatCardFront(translation),
+    back: formatCardBack(translation),
+    tags: [`${translation.sourceLang}-${translation.targetLang}`, translation.quality],
+    sourceLang: translation.sourceLang,
+    targetLang: translation.targetLang,
+    quality: translation.quality,
+    audioData: translation.audioData,
+    audioFilename: translation.audioFilename,
+  });
+}
+
+async function handleSaveDictionaryToAnki(
+  entry: CapturedDictionaryEntry
+): Promise<{ noteId: number; cardCount: number }> {
+  return saveNoteToAnki({
+    front: formatDictionaryFront(entry),
+    back: formatDictionaryBack(entry),
+    tags: [entry.language, "dictionary"],
+    sourceLang: entry.language,
+    targetLang: entry.language,
+    quality: "dictionary",
+    audioData: entry.audioData,
+    audioFilename: entry.audioFilename,
+  });
 }

@@ -1,4 +1,4 @@
-// Type definitions for Kagi Translate API responses
+// Type definitions for Kagi Translate and Dictionary API responses
 
 export interface KagiWordInsight {
   id: string;
@@ -48,6 +48,42 @@ export interface CapturedTranslation {
 
   // From text-alignments API
   alignments?: KagiTextAlignment;
+
+  // Audio data (base64 encoded)
+  audioData?: string;
+  audioFilename?: string;
+
+  // Metadata
+  timestamp: number;
+}
+
+// Dictionary-specific types
+export interface DictionaryDefinition {
+  partOfSpeech: string;
+  definition: string;
+  examples?: string[];
+}
+
+export interface DictionarySynonym {
+  word: string;
+  partOfSpeech?: string;
+}
+
+export interface DictionaryExample {
+  sentence: string;
+  translation?: string;
+}
+
+export interface CapturedDictionaryEntry {
+  word: string;
+  language: string;
+  pronunciation?: string;
+  definitions: DictionaryDefinition[];
+  synonyms?: DictionarySynonym[];
+  examples?: DictionaryExample[];
+  etymology?: string;
+  notes?: string;
+  relatedWords?: string[];
 
   // Audio data (base64 encoded)
   audioData?: string;
