@@ -5,17 +5,26 @@ export class UIInjector {
   private toast: HTMLDivElement | null = null;
   private onSaveCallback: (() => void) | null = null;
   private observer: MutationObserver | null = null;
+  private pageType: 'translate' | 'dictionary';
 
-  constructor() {
+  constructor(pageType: 'translate' | 'dictionary' = 'translate') {
+    this.pageType = pageType;
     this.injectButton();
     this.injectToastContainer();
   }
 
   private injectButton(): void {
-    const tryInject = () => {
+    // For dictionary pages, inject floating button immediately
+    if (this.pageType === 'dictionary') {
+      this.injectFloatingButton();
+      return;
+    }
+
+    // For translation pages, try toolbar injection
+    const tryInjectToolbar = (): boolean => {
       if (this.button) return true; // Already injected
 
-      // Look for the bottom toolbar that contains copy/download buttons
+      // Look for the bottom toolbar that contains copy/download buttons (translation page)
       const toolbar = document.querySelector(".fixed.z-\\[25\\]");
 
       if (toolbar) {
@@ -55,24 +64,19 @@ export class UIInjector {
           toolbar.appendChild(buttonWrapper);
         }
 
-        // Stop observing once button is injected
-        if (this.observer) {
-          this.observer.disconnect();
-          this.observer = null;
-        }
-        
+        this.stopObserving();
         return true;
       }
-      
+
       return false;
     };
 
-    // Try immediate injection
-    if (tryInject()) return;
+    // Try immediate toolbar injection
+    if (tryInjectToolbar()) return;
 
     // Use MutationObserver to watch for toolbar appearance
     this.observer = new MutationObserver(() => {
-      tryInject();
+      tryInjectToolbar();
     });
 
     // Observe the entire document body for changes
@@ -81,8 +85,41 @@ export class UIInjector {
       subtree: true,
     });
 
-    // Fallback: also try after short delay in case observer misses it
-    setTimeout(() => tryInject(), 1000);
+    // After 2 seconds, if toolbar not found, create floating button
+    setTimeout(() => {
+      if (!this.button) {
+        this.injectFloatingButton();
+      }
+    }, 2000);
+  }
+
+  private injectFloatingButton(): void {
+    if (this.button) return; // Already injected
+
+    // Create a floating button for pages without the toolbar (e.g., dictionary page)
+    this.button = document.createElement("button");
+    this.button.id = "kagi-to-anki-button";
+    this.button.type = "button";
+    this.button.className = "kagi-to-anki-floating-btn";
+    this.button.setAttribute("aria-label", "Save to Anki");
+    this.button.innerHTML = "Save to Anki";
+    this.button.style.display = "none"; // Hidden until entry is ready
+
+    this.button.addEventListener("click", () => {
+      if (this.onSaveCallback) {
+        this.onSaveCallback();
+      }
+    });
+
+    document.body.appendChild(this.button);
+    this.stopObserving();
+  }
+
+  private stopObserving(): void {
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
+    }
   }
 
   private injectToastContainer(): void {
@@ -138,5 +175,18 @@ export class UIInjector {
     if (this.button && !this.button.disabled) {
       this.button.innerHTML = text;
     }
+  }
+
+  public destroy(): void {
+    this.stopObserving();
+    if (this.button) {
+      this.button.remove();
+      this.button = null;
+    }
+    if (this.toast) {
+      this.toast.remove();
+      this.toast = null;
+    }
+    this.onSaveCallback = null;
   }
 }

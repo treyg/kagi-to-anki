@@ -10,13 +10,16 @@ import type {
 export class KagiScraper {
   private currentTranslation: Partial<CapturedTranslation> = {};
   private capturedInsights: Set<string> = new Set();
+  private urlPollingInterval: ReturnType<typeof setInterval> | null = null;
+  private domMonitoringInterval: ReturnType<typeof setInterval> | null = null;
+  private clickHandler: ((e: Event) => void) | null = null;
 
   constructor() {
     this.interceptFetch();
 
     // Extract from URL immediately and periodically (for Firefox timing issues)
     this.extractFromURL();
-    setInterval(() => this.extractFromURL(), 1000);
+    this.urlPollingInterval = setInterval(() => this.extractFromURL(), 1000);
 
     // Also try to extract translation from DOM periodically
     this.startDOMMonitoring();
@@ -325,7 +328,7 @@ export class KagiScraper {
     };
 
     // Check every 500ms
-    setInterval(checkDOM, 500);
+    this.domMonitoringInterval = setInterval(checkDOM, 500);
 
     // Also check after delays to give page time to load
     setTimeout(checkDOM, 500);
@@ -335,7 +338,7 @@ export class KagiScraper {
 
   private monitorWordInsightClicks(): void {
     // Listen for clicks on word insight buttons
-    document.addEventListener("click", (e) => {
+    this.clickHandler = (e: Event) => {
       const target = e.target as HTMLElement;
       const insightButton = target.closest(".word-insight");
 
@@ -360,13 +363,31 @@ export class KagiScraper {
           }
         }
       }
-    });
+    };
+    document.addEventListener("click", this.clickHandler);
   }
 
   public reset(): void {
     this.currentTranslation = {
       timestamp: Date.now(),
     };
+    this.capturedInsights.clear();
+  }
+
+  public destroy(): void {
+    if (this.urlPollingInterval) {
+      clearInterval(this.urlPollingInterval);
+      this.urlPollingInterval = null;
+    }
+    if (this.domMonitoringInterval) {
+      clearInterval(this.domMonitoringInterval);
+      this.domMonitoringInterval = null;
+    }
+    if (this.clickHandler) {
+      document.removeEventListener("click", this.clickHandler);
+      this.clickHandler = null;
+    }
+    this.currentTranslation = {};
     this.capturedInsights.clear();
   }
 }

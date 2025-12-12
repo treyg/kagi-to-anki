@@ -1,6 +1,6 @@
 // Format flashcard HTML from captured translation data
 
-import type { CapturedTranslation } from "../types/kagi";
+import type { CapturedTranslation, CapturedDictionaryEntry } from "../types/kagi";
 
 export function formatCardFront(translation: CapturedTranslation): string {
   return translation.sourceText;
@@ -235,4 +235,201 @@ function escapeHtml(text: string): string {
     "'": "&#039;",
   };
   return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
+// Dictionary card formatting
+
+export function formatDictionaryFront(entry: CapturedDictionaryEntry): string {
+  let front = escapeHtml(entry.word);
+
+  if (entry.pronunciation) {
+    front += ` <span class="pronunciation">[${escapeHtml(entry.pronunciation)}]</span>`;
+  }
+
+  return front;
+}
+
+export function formatDictionaryBack(entry: CapturedDictionaryEntry): string {
+  const parts: string[] = [];
+
+  parts.push(`<div class="dictionary-card">`);
+
+  // Primary Meaning (first definition)
+  if (entry.definitions && entry.definitions.length > 0) {
+    const primary = entry.definitions[0];
+    parts.push(`
+      <div class="section primary-meaning">
+        <h3>Primary Meaning</h3>
+        <div class="definition">
+          ${primary.partOfSpeech ? `<span class="pos">${escapeHtml(primary.partOfSpeech)}</span>` : ""}
+          <span class="text">${escapeHtml(primary.definition)}</span>
+        </div>
+      </div>
+    `);
+
+    // Other Meanings (rest of definitions)
+    if (entry.definitions.length > 1) {
+      parts.push(`<div class="section other-meanings"><h3>Other Meanings</h3>`);
+      entry.definitions.slice(1).forEach((def, i) => {
+        parts.push(`
+          <div class="definition">
+            <span class="num">${i + 1}.</span>
+            ${def.partOfSpeech ? `<span class="pos">${escapeHtml(def.partOfSpeech)}</span>` : ""}
+            <span class="text">${escapeHtml(def.definition)}</span>
+          </div>
+        `);
+      });
+      parts.push(`</div>`);
+    }
+  } else {
+    parts.push(`<p class="no-definitions">No definitions found</p>`);
+  }
+
+  // Notes
+  if (entry.notes) {
+    parts.push(`
+      <div class="section notes">
+        <h3>Notes</h3>
+        <p>${escapeHtml(entry.notes)}</p>
+      </div>
+    `);
+  }
+
+  // Examples
+  if (entry.examples && entry.examples.length > 0) {
+    parts.push(`<div class="section examples"><h3>Examples</h3><ul>`);
+    entry.examples.forEach(ex => {
+      parts.push(`<li>${escapeHtml(ex.sentence)}</li>`);
+    });
+    parts.push(`</ul></div>`);
+  }
+
+  // Etymology
+  if (entry.etymology) {
+    parts.push(`
+      <div class="section etymology">
+        <h3>Etymology</h3>
+        <p>${escapeHtml(entry.etymology)}</p>
+      </div>
+    `);
+  }
+
+  // Related Words (use synonyms if relatedWords not available)
+  const relatedWords = entry.relatedWords || entry.synonyms?.map(s => s.word);
+  if (relatedWords && relatedWords.length > 0) {
+    parts.push(`
+      <div class="section related-words">
+        <h3>Related Words</h3>
+        <p>${relatedWords.map(w => escapeHtml(w)).join(', ')}</p>
+      </div>
+    `);
+  }
+
+  parts.push(`</div>`);
+
+  // Add CSS
+  parts.unshift(getDictionaryCardCSS());
+
+  return parts.join("\n");
+}
+
+function getDictionaryCardCSS(): string {
+  return `
+<style>
+.dictionary-card {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  padding: 16px;
+}
+
+.pronunciation {
+  font-weight: normal;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.section {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.section h3 {
+  font-size: 1em;
+  font-weight: 600;
+  color: #5352FF;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.primary-meaning .definition {
+  font-size: 1.1em;
+}
+
+.definition {
+  margin: 8px 0;
+}
+
+.num {
+  font-weight: bold;
+  color: #5352FF;
+  margin-right: 6px;
+}
+
+.pos {
+  font-style: italic;
+  color: #888;
+  margin-right: 8px;
+}
+
+.text {
+  display: inline;
+}
+
+.notes p {
+  margin: 0;
+  color: #555;
+  background: rgba(83, 82, 255, 0.05);
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.examples ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.examples li {
+  padding: 8px 12px;
+  margin: 6px 0;
+  background: rgba(66, 186, 153, 0.05);
+  border-left: 3px solid rgba(66, 186, 153, 0.4);
+  border-radius: 0 4px 4px 0;
+}
+
+.etymology p {
+  margin: 0;
+  color: #666;
+  font-style: italic;
+}
+
+.related-words p {
+  margin: 0;
+  color: #555;
+}
+
+.no-definitions {
+  color: #999;
+  font-style: italic;
+}
+</style>
+  `;
 }
