@@ -56,6 +56,7 @@ Since discovering kagi translate, it has been a great resource for me in my lang
 ## Features
 
 - **Rich Flashcards**: Captures main translation, alternatives, and linguistic insights
+- **Dictionary Support**: Create flashcards from Kagi Dictionary entries with definitions, examples, etymology, and related words
 - **Audio Support**: Automatically downloads and embeds pronunciation audio
 - **Word-Level Insights**: When you click underlined words in Kagi, those variations are added to the card
 - **Auto-tagging**: Cards are tagged by language pair and quality level
@@ -77,7 +78,7 @@ This will auto-reload the extension when you make changes.
    - Click the extension icon → Settings
    - Select your preferred deck
 
-2. **Create Flashcards**:
+2. **Create Translation Flashcards**:
 
    - Go to [translate.kagi.com](https://translate.kagi.com)
    - Enter a translation
@@ -86,7 +87,16 @@ This will auto-reload the extension when you make changes.
    - The flashcard is created with audio and all captured data
      \*\*Note - whatever voice you have selected for the audio at the time of saving will be downloaded
 
-3. **Card Structure**:
+3. **Create Dictionary Flashcards**:
+
+   - Go to [translate.kagi.com/dictionary](https://translate.kagi.com/dictionary)
+   - Look up a word
+   - Click the floating "Save to Anki" button in the bottom-right corner
+   - The flashcard includes definitions, examples, etymology, and related words
+
+4. **Card Structure**:
+
+   **Translation Cards:**
    - **Front**: Source text
    - **Back**:
      - Translation with audio
@@ -94,6 +104,16 @@ This will auto-reload the extension when you make changes.
      - Alternative translations with explanations
      - Word-level insights
      - Metadata (language pair, quality, date)
+
+   **Dictionary Cards:**
+   - **Front**: Word with pronunciation
+   - **Back**:
+     - Primary meaning with part of speech
+     - Other meanings
+     - Usage notes
+     - Example sentences
+     - Etymology
+     - Related words/synonyms
 
 ## How It Works
 
