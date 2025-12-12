@@ -29,37 +29,66 @@ function detectSelectedVoice(): string {
   return 'sage'; // default fallback
 }
 
-// Initialize scrapers based on page type
-const pageType = getPageType();
-const translationScraper = pageType === 'translate' ? new KagiScraper() : null;
-const dictionaryScraper = pageType === 'dictionary' ? new DictionaryScraper() : null;
-const ui = new UIInjector(pageType);
+// State variables (mutable for SPA navigation support)
+let pageType: 'translate' | 'dictionary';
+let translationScraper: KagiScraper | null = null;
+let dictionaryScraper: DictionaryScraper | null = null;
+let ui: UIInjector | null = null;
+let checkInterval: ReturnType<typeof setInterval> | null = null;
 
-// Monitor for completion based on page type
-let checkInterval = setInterval(() => {
-  if (pageType === 'dictionary') {
-    if (dictionaryScraper?.hasCompleteEntry()) {
-      ui.showButton();
-    }
-  } else {
-    if (translationScraper?.hasCompleteTranslation()) {
-      ui.showButton();
-    }
+// Initialize or reinitialize page based on current URL
+function initializePage(): void {
+  // Cleanup existing instances
+  translationScraper?.destroy();
+  dictionaryScraper?.destroy();
+  ui?.destroy();
+  if (checkInterval) {
+    clearInterval(checkInterval);
+    checkInterval = null;
   }
-}, 500);
 
-// Handle save button click
-ui.onSave(async () => {
+  // Determine page type and create appropriate scraper
+  pageType = getPageType();
+
+  if (pageType === 'dictionary') {
+    translationScraper = null;
+    dictionaryScraper = new DictionaryScraper();
+  } else {
+    dictionaryScraper = null;
+    translationScraper = new KagiScraper();
+  }
+
+  ui = new UIInjector(pageType);
+
+  // Setup completion checker
+  checkInterval = setInterval(() => {
+    if (pageType === 'dictionary') {
+      if (dictionaryScraper?.hasCompleteEntry()) {
+        ui?.showButton();
+      }
+    } else {
+      if (translationScraper?.hasCompleteTranslation()) {
+        ui?.showButton();
+      }
+    }
+  }, 500);
+
+  // Re-register save handler
+  ui.onSave(handleSave);
+}
+
+// Unified save handler
+async function handleSave(): Promise<void> {
+  if (!ui) return;
+
   ui.setLoading(true);
 
   try {
     const settings = await getSettings();
 
     if (pageType === 'dictionary') {
-      // Handle dictionary save
       await handleDictionarySave(settings);
     } else {
-      // Handle translation save
       await handleTranslationSave(settings);
     }
   } catch (error) {
@@ -67,7 +96,10 @@ ui.onSave(async () => {
   } finally {
     ui.setLoading(false);
   }
-});
+}
+
+// Initial setup
+initializePage();
 
 async function handleTranslationSave(settings: Awaited<ReturnType<typeof getSettings>>) {
   if (!translationScraper) {
@@ -120,7 +152,7 @@ async function handleTranslationSave(settings: Awaited<ReturnType<typeof getSett
       parts.push(details.join(', '));
     }
 
-    ui.showToast(parts.join(' • '), 'success');
+    ui?.showToast(parts.join(' • '), 'success');
   } else {
     throw new Error(response.error || 'Unknown error');
   }
@@ -175,31 +207,41 @@ async function handleDictionarySave(settings: Awaited<ReturnType<typeof getSetti
       ? `Saved to Anki! • ${details.join(', ')}`
       : 'Saved to Anki!';
 
-    ui.showToast(message, 'success');
+    ui?.showToast(message, 'success');
   } else {
     throw new Error(response.error || 'Unknown error');
   }
 }
 
-// Monitor URL changes (for SPA navigation)
+// Monitor URL changes (for SPA navigation with page type switching)
 let lastURL = window.location.href;
+let lastPageType = getPageType();
+
 setInterval(() => {
   const currentURL = window.location.href;
   if (currentURL !== lastURL) {
     lastURL = currentURL;
+    const currentPageType = getPageType();
 
-    // Reset appropriate scraper
-    if (pageType === 'dictionary') {
-      dictionaryScraper?.reset();
+    if (currentPageType !== lastPageType) {
+      // Page type changed - full reinitialization
+      lastPageType = currentPageType;
+      initializePage();
     } else {
-      translationScraper?.reset();
+      // Same page type, just reset scraper
+      if (pageType === 'dictionary') {
+        dictionaryScraper?.reset();
+      } else {
+        translationScraper?.reset();
+      }
+      ui?.hideButton();
     }
-
-    ui.hideButton();
   }
 }, 500);
 
 // Cleanup on unload
 window.addEventListener('beforeunload', () => {
-  clearInterval(checkInterval);
+  if (checkInterval) {
+    clearInterval(checkInterval);
+  }
 });

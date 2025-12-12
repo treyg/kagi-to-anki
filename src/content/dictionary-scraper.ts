@@ -10,6 +10,7 @@ import type {
 export class DictionaryScraper {
   private currentEntry: Partial<CapturedDictionaryEntry> = {};
   private observer: MutationObserver | null = null;
+  private pollingInterval: ReturnType<typeof setInterval> | null = null;
 
   constructor() {
     this.interceptFetch();
@@ -27,7 +28,7 @@ export class DictionaryScraper {
 
   private startPolling(): void {
     // Consolidate all periodic checks into one interval
-    setInterval(() => {
+    this.pollingInterval = setInterval(() => {
       this.extractFromURL();
 
       if (!this.currentEntry.definitions?.length) {
@@ -408,5 +409,17 @@ export class DictionaryScraper {
     this.currentEntry = {
       timestamp: Date.now(),
     };
+  }
+
+  public destroy(): void {
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
+    }
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+      this.pollingInterval = null;
+    }
+    this.currentEntry = {};
   }
 }

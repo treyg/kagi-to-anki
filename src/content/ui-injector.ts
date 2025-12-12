@@ -176,4 +176,17 @@ export class UIInjector {
       this.button.innerHTML = text;
     }
   }
+
+  public destroy(): void {
+    this.stopObserving();
+    if (this.button) {
+      this.button.remove();
+      this.button = null;
+    }
+    if (this.toast) {
+      this.toast.remove();
+      this.toast = null;
+    }
+    this.onSaveCallback = null;
+  }
 }
